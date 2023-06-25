@@ -34,7 +34,7 @@ public class BookController {
 	  return "bookcreate";
 	 }
 	
-	
+	//test
 	
 	
 	@GetMapping("/list")
