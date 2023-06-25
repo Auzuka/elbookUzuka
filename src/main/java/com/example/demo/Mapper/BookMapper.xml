@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.Mapper.BookMapper">
+
+	<resultMap id="Base_Result_Map" type="com.example.demo.Entity.BookList">
+		<id column="book_id" property="book_id" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<!-- stock file_name　追記処理必要 -->
+	<select id="findBook" resultMap="Base_Result_Map">
+		SELECT 
+			book_id, book_name, book_author, 
+			book_publisher, book_releasetime, 
+			create_time, update_time, file_name, stock
+		FROM 
+			EL_BOOK
+		ORDER BY 
+			book_id DESC;
+	</select>
+
+	<!-- stock file_name　追記処理必要 -->
+	<select id="getBookList" resultMap="Base_Result_Map">
+		SELECT
+			t1.book_id,
+			t1.book_name,
+			t1.book_author,
+			t1.book_publisher,
+			t1.book_releasetime,
+			t1.create_time,
+			t1.update_time,
+			t1.file_name,
+			t1.stock
+		FROM
+			EL_BOOK as t1
+			left outer join EL_RENT as t2
+				on t1.book_id = t2.book_id
+					and t2.user_id = #{rental_key_id}
+					and t2.dlt_flg = 0
+		WHERE
+			t2.rent_id is null
+		ORDER BY
+			t1.book_id DESC;
+	</select>
+
+	<!-- stock file_name　追記処理必要-->
+	<select id="targetBook" resultMap="Base_Result_Map" parameterType="com.example.demo.Entity.BookList">
+		SELECT
+			book_id, book_name, book_author, 
+			book_publisher, book_releasetime, 
+			create_time, update_time, file_name, stock
+		FROM
+			EL_BOOK WHERE book_id =#{book_id};
+	</select>
+
+
+	<select id="getMaxNumberBook" resultType="int">
+		SELECT count(*) FROM EL_BOOK;
+	</select>
+
+
+	<insert id="createBook" parameterType="com.example.demo.Entity.BookList">
+		INSERT INTO 
+			EL_BOOK(book_name, book_author, book_publisher, 
+					book_releasetime, create_time,file_name, stock)
+		VALUES
+			(#{book_name}, #{book_author}, #{book_publisher}, 
+			#{book_releasetime}, now(), #{file_name}, #{stock});
+	</insert>
+
+	<update id="editBook" parameterType="com.example.demo.Entity.BookList">
+		UPDATE 
+			EL_BOOK 
+		SET 
+			book_name =#{book_name}, book_author=#{book_author}, 
+			book_publisher=#{book_publisher}, book_releasetime=#{book_releasetime}, 
+			update_time =now(), file_name = #{file_name}
+		WHERE
+			book_id =#{book_id};
+	</update>
+
+	<delete id="deleteBook" parameterType="com.example.demo.Entity.BookList">
+		DELETE FROM EL_BOOK
+		WHERE book_id =#{book_id};
+	</delete>
+
+	<update id="rentalBook" parameterType="com.example.demo.Entity.BookList">
+		UPDATE EL_BOOK SET stock = stock - 1
+		WHERE book_id =#{book_id};
+	</update>
+
+	<update id="returnBook" parameterType="com.example.demo.Entity.BookList">
+		UPDATE EL_BOOK SET stock = stock + 1
+		WHERE book_id =#{book_id};
+	</update>
+
+</mapper>

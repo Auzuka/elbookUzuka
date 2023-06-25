@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>ELBOOK</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+</body>
+
+<header th:replace="header :: header"></header>
+<br>
+<h2 class="container">User_Edit</h2>
+<br>
+<div class="form-box container">
+	<!-- class="form-box container" -->
+	<form th:each="user: ${TargetUser}" th:action="@{/user/useredit}" th:object="${editUser}" method="post">
+		<div class="form-group ">
+			<label for="text1">Name:</label> <input th:placeholder="${user.user_name}" type="text" name="user_name"
+				th:value="${user.user_name}" id="text1" class="form-control">
+		</div>
+		<br>
+		<div class="form-group ">
+			<label for="text1">MailAdress:</label> <input th:placeholder="${user.mail}" type="text" name="mail"
+				th:value="${user.mail}" id="text1" class="form-control">
+		</div>
+		<br>
+		<div class="form-group ">
+			<label for="passwd1">Password:</label> <input th:placeholder="password" type="password" name="pass"
+				th:value="${user.pass}" id="passwd1" class="form-control ">
+		</div>
+
+		<br>
+		<!--	redio-->
+		<div class="form-check">
+			<input class="form-check-input" type="radio" name="authority" value="ADMIN" id="flexRadioDefault1">
+			<label class="form-check-label" for="flexRadioDefault1">
+				Admin
+			</label>
+		</div>
+		<div class="form-check">
+			<input class="form-check-input" type="radio" name="authority"  value="USER" id="flexRadioDefault2" checked>
+			<label class="form-check-label" for="flexRadioDefault2">
+				User
+			</label>
+		</div>
+		<!--	redio-->
+
+
+		<br> <br> <br>
+		<div class="d-grid gap-4 btn-block d-md-flex justify-content-md-end">
+			<button class="btn  btn-primary  w-25" type="submit">Edit</button>
+		</div>
+
+
+
+
+
+		<input type="hidden" class="" id="" name="user_id" th:value="${user_id}"></input>
+	</form>
+</div>
+<!-- class="form-box container" -->
+
+</html>

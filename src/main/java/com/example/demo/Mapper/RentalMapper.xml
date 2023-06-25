@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.Mapper.RentalMapper">
+
+	<resultMap id="Base_Result_Map" type="com.example.demo.Entity.Rental">
+		<id column="book_id" property="book_id" jdbcType="INTEGER" />
+	</resultMap>
+
+	<insert id="rentalBook" parameterType="com.example.demo.Entity.Rental">
+
+		INSERT	INTO EL_RENT(user_id, book_id, rent_day)
+		VALUES	(#{rental_key_id}, #{book_id}, now());
+	</insert>
+
+	<select id="findRentalBook" resultMap="Base_Result_Map" parameterType="com.example.demo.Entity.Rental">
+		SELECT	EL_RENT.rent_id, EL_RENT.user_id, EL_RENT.book_id,
+				EL_RENT.rent_day,
+				EL_BOOK .book_name
+		FROM	EL_RENT
+		INNER	JOIN EL_BOOK
+		ON 		EL_RENT.book_id = EL_BOOK.book_id
+		WHERE 	EL_RENT.user_id  = #{rental_key_id}
+		AND 	dlt_flg = 0 ;
+
+		
+	</select>
+	<update  id="returnBook" parameterType="com.example.demo.Entity.Rental"> 
+		UPDATE	EL_RENT
+		SET		dlt_flg = 1
+		WHERE	user_id  = #{rental_key_id}
+		AND		book_id = #{book_id};
+
+	</update>
+
+</mapper>
+

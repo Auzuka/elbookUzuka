@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.Mapper.UserMapper">
+
+	<resultMap id="Base_Result_Map" type="com.example.demo.Entity.UserList">
+		<id column="user_id" property="user_id" jdbcType="INTEGER" />
+	</resultMap>
+
+	<select id="findUser" resultMap="Base_Result_Map">
+		SELECT 
+			user_id, user_name, mail, 
+			pass, create_time, delete_flg
+		FROM 
+			EL_USER
+		WHERE 
+			delete_flg = 0
+	</select>
+
+	<select id="targetUser" resultMap="Base_Result_Map" parameterType="com.example.demo.Entity.UserList">
+		SELECT 
+			user_id, user_name, mail, 
+			pass, create_time, delete_flg
+		FROM 
+			EL_USER
+		WHERE
+			user_id =#{user_id};
+	</select>
+
+
+	<select id="emailFindUser" resultMap="Base_Result_Map" parameterType="com.example.demo.Entity.UserList">
+		SELECT 
+			user_id, user_name, mail, 
+			pass, create_time, delete_flg,authority
+		FROM 
+			EL_USER
+		WHERE
+			mail=#{mail};
+	</select>
+
+
+	<insert id="createUser" parameterType="com.example.demo.Entity.UserList">
+		INSERT INTO 
+			EL_USER(user_name, mail, pass, create_time, authority)
+		VALUES
+			(#{user_name}, #{mail}, #{pass}, now(), #{authority});
+	</insert>
+
+	<update id="editUser" parameterType="com.example.demo.Entity.UserList">
+		UPDATE 
+			EL_USER
+		SET 
+			user_name =#{user_name}, mail=#{mail}, pass=#{pass}, authority=#{authority}
+		WHERE
+			user_id =#{user_id};
+	</update>
+
+	<update id="deleteUser" parameterType="com.example.demo.Entity.UserList">
+		UPDATE 
+			EL_USER
+		SET
+			delete_flg =1
+		WHERE
+			user_id =#{user_id};
+	</update>
+
+	<delete id="emailDeleteUesr" parameterType="com.example.demo.Entity.UserList">
+		DELETE FROM EL_USER WHERE mail=#{mail};
+	</delete>
+
+
+</mapper>
